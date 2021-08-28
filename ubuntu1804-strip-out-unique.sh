@@ -42,8 +42,6 @@ function ready_to_reboot_on(){
   echo -e "===>    Going to reboot    <==="
   rm -rf /var/log/journal/*
   rm -f $PWD/ubuntu1804-strip-out-unique.sh
-  systemctl daemon-reload
-  systemctl enable refresh_ssh.service
   shutdown -h now
 }
 
