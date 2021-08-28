@@ -8,7 +8,7 @@ function upgrade_to_latest_on (){
 
 function stop_log_service_on (){
   echo -e "===>  Stopping log service <==="
-  service rsyslog stop
+  systemctl stop rsyslog
 }
 
 function clean_log_on (){
@@ -28,11 +28,7 @@ function clean_ssh_on (){
   echo -e "===>    Cleaning ssh key   <==="
   rm -f /etc/ssh/ssh_host_*
   echo -e "===>Adding refresh ssh key <==="
-  cat > /etc/rc.local << EOF
-  test -f /etc/ssh/ssh_host_dsa_key || dpkg-reconfigure openssh-server && rm -rf /etc/rc.local
-  exit 0
-EOF
-  chmod +x /etc/rc.local
+  test -f /etc/ssh/ssh_host_dsa_key || dpkg-reconfigure openssh-server &> /dev/null
 }
 
 function clean_bash_history_on(){
@@ -43,6 +39,7 @@ function clean_bash_history_on(){
 
 function ready_to_reboot_on(){
   echo -e "===>    Going to reboot    <==="
+  rm -rf /var/log/journal/*
   rm -f $PWD/ubuntu1804-strip-out-unique.sh
   shutdown -h now
 }
