@@ -40,6 +40,7 @@ ExecStart=/tmp/refresh_ssh.sh && rm -rf /etc/systemd/system/refresh_ssh.service
 
 [Install]
 WantedBy=default.target
+EOF
 }
 
 function clean_bash_history_on(){
