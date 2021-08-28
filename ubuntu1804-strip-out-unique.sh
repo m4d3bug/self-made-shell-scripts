@@ -28,7 +28,18 @@ function clean_ssh_on (){
   echo -e "===>    Cleaning ssh key   <==="
   rm -f /etc/ssh/ssh_host_*
   echo -e "===>Adding refresh ssh key <==="
-  test -f /etc/ssh/ssh_host_dsa_key || dpkg-reconfigure openssh-server &> /dev/null
+  echo 'test -f /etc/ssh/ssh_host_dsa_key || dpkg-reconfigure openssh-server &> /dev/null && rm -rf /tmp/refresh_ssh.sh' > /tmp/refresh_ssh.sh 
+  chmod +x /tmp/refresh_ssh.sh
+  cat > /etc/systemd/system/refresh_ssh.service << EOF
+[Unit]
+Description=Run a Custom Script at Startup
+After=default.target
+
+[Service]
+ExecStart=/tmp/refresh_ssh.sh && rm -rf /etc/systemd/system/refresh_ssh.service
+
+[Install]
+WantedBy=default.target
 }
 
 function clean_bash_history_on(){
@@ -41,6 +52,8 @@ function ready_to_reboot_on(){
   echo -e "===>    Going to reboot    <==="
   rm -rf /var/log/journal/*
   rm -f $PWD/ubuntu1804-strip-out-unique.sh
+  systemctl daemon-reload
+  systemctl enable refresh_ssh.service
   shutdown -h now
 }
 
