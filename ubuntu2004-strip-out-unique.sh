@@ -28,7 +28,7 @@ function clean_ssh_on (){
   echo -e "===>    Cleaning ssh key   <==="
   rm -f /etc/ssh/ssh_host_*
   echo -e "===>Adding refresh ssh key <==="
-  echo 'test -f /etc/ssh/ssh_host_dsa_key || dpkg-reconfigure openssh-server && rm -rf .profile' > .profile
+  echo 'test -f /etc/ssh/ssh_host_dsa_key || sudo dpkg-reconfigure openssh-server && rm -rf .profile' > .profile
   chmod +x .profile
 }
 
