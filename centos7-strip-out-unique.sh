@@ -1,9 +1,8 @@
-#!/bin/bash
 # Description: Strip Out Unique Data
-# Usage: sudo chmod +x ubuntu1804-strip-out-unique.sh && sudo ./ubuntu1804-strip-out-unique.sh
+# Usage: sudo chmod +x centos7-strip-out-unique.sh && sudo ./centos7-strip-out-unique.sh
 function upgrade_to_latest_on (){
   echo -e "===>Upgrading to the latest<==="
-  apt update && apt upgrade -y && apt clean
+  yum makecache fast && yum makecache && yum repolist && yum update -y && yum clean all && rm -rf /var/cache/yum
 }
 
 function stop_log_service_on (){
@@ -13,9 +12,8 @@ function stop_log_service_on (){
 
 function clean_log_on (){
   echo -e "===>   Cleaning log file   <==="
-  truncate -s0 /var/log/*tmp
-  truncate -s0 /var/log/*log
-  truncate -s0 /var/log/*/*log
+  truncate -s0 /var/log/*/* &> /dev/null
+  truncate -s0 /var/log/* &> /dev/null
 }
 
 function clean_tmp_on (){
@@ -27,9 +25,6 @@ function clean_tmp_on (){
 function clean_ssh_on (){
   echo -e "===>    Cleaning ssh key   <==="
   rm -f /etc/ssh/ssh_host_*
-  echo -e "===>Adding refresh ssh key <==="
-  echo 'test -f /etc/ssh/ssh_host_dsa_key || dpkg-reconfigure openssh-server && rm -rf .profile' > .profile
-  chmod +x .profile
 }
 
 function clean_bash_history_on(){
@@ -41,8 +36,8 @@ function clean_bash_history_on(){
 function ready_to_reboot_on(){
   echo -e "===>    Going to shutdown  <==="
   rm -rf /var/log/journal/*
-  rm -f $PWD/ubuntu1804-strip-out-unique.sh
-  shutdown -h now
+  rm -f $PWD/centos7-strip-out-unique.sh
+  sys-unconfig
 }
 
 upgrade_to_latest_on

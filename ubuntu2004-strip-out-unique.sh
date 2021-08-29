@@ -1,6 +1,6 @@
 #!/bin/bash
 # Description: Strip Out Unique Data
-# Usage: sudo chmod +x ubuntu1804-strip-out-unique.sh && sudo ./ubuntu1804-strip-out-unique.sh
+# Usage: sudo chmod +x ubuntu2004-strip-out-unique.sh && sudo ./ubuntu2004-strip-out-unique.sh
 function upgrade_to_latest_on (){
   echo -e "===>Upgrading to the latest<==="
   apt update && apt upgrade -y && apt clean
@@ -41,7 +41,8 @@ function clean_bash_history_on(){
 function ready_to_reboot_on(){
   echo -e "===>    Going to shutdown  <==="
   rm -rf /var/log/journal/*
-  rm -f $PWD/ubuntu1804-strip-out-unique.sh
+  cloud-init clean --logs
+  rm -f $PWD/ubuntu2004-strip-out-unique.sh
   shutdown -h now
 }
 
